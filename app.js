@@ -1,13 +1,14 @@
 $(document).ready(function () {
 
-    $("button").click(function () {
-        $.getJSON('data.json', function (dataObj) {
+    $.getJSON('data.json', function (dataObj) {
+        $("button").click(function () {
+
             var outputKey = "";
-            
+
             //Well Constructor Function
             var Well = function (index) {
                 this.result = dataObj.result.records[index];
-                
+
                 //Update Function
                 this.update = function () {
                     for (key in this.result) {
@@ -18,11 +19,11 @@ $(document).ready(function () {
                     $(".records-container").html(outputKey.replace(/;/g, " "));
                 }
             }
-            
+
             //Construct Wells
             var marzett = new Well(0);
             var johnsonState = new Well(1);
-            
+
             //Logic
             if ($("option:selected").val() == 'Marzett') {
                 marzett.update();
@@ -31,7 +32,6 @@ $(document).ready(function () {
             } else {
                 $(".records-container").html(outputKey);
             };
-
         });
     });
 });
