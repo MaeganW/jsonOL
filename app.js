@@ -1,37 +1,37 @@
 $(document).ready(function () {
-
     $.getJSON('data.json', function (dataObj) {
-        $("button").click(function () {
 
-            var outputKey = "";
+        var wells = dataObj.result.records;
+        var selectedWell;
 
-            //Well Constructor Function
-            var Well = function (index) {
-                this.result = dataObj.result.records[index];
+        function findWell(well) {
+            return well.well_name === selectedWell.toUpperCase();
+        }
 
-                //Update Function
-                this.update = function () {
-                    for (key in this.result) {
-                        formattedKey = key.toUpperCase(key).replace(/_/g, " ");
+        function updateWell() {
+            var output = "";
+            selectedWell = $("option:selected").val();
+            var selectedWellObj = wells.find(findWell);
 
-                        outputKey += '<li><span class="key">' + formattedKey + '</span> : <span class="value">' + this.result[key] + '</span></li>';
-                    }
-                    $(".records-container").html(outputKey.replace(/;/g, " "));
-                }
+            var buildOutput = function () {
+                var keys = Object.keys(selectedWellObj);
+
+                keys.forEach(function (key) {
+                    var value = selectedWellObj[key];
+                    output += '<li><span class="key">' + key.toUpperCase(key).replace(/_/g, " ") + '</span> : <span class="value">' + value + '</span></li>';
+                });
+                $(".records-container").html(output);
             }
+            buildOutput();
+        }
 
-            //Construct Wells
-            var marzett = new Well(0);
-            var johnsonState = new Well(1);
-
-            //Logic
-            if ($("option:selected").val() == 'Marzett') {
-                marzett.update();
-            } else if ($("option:selected").val() == 'Johnson State') {
-                johnsonState.update();
+        $("button").click(function () {
+            if ($("option:selected").val() === 'Select Well') {
+                var output = "";
+                $(".records-container").html(output);
             } else {
-                $(".records-container").html(outputKey);
-            };
+                updateWell();
+            }
         });
     });
 });
